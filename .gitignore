@@ -18,3 +18,4 @@ relPaths.sh
 *_info_settings.req
 *.py[cod]
 __pycache__/
+system_tests/test-reports/
