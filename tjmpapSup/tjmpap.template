@@ -18,18 +18,18 @@ record(bo, "$(P)DISABLE")
     field(ONAM, "COMMS DISABLED")
 }
 
-record(mbbi, "$(P)MODE")
+record(mbbi, "$(P)JMP:MODE")
 {
     field(SCAN, "Passive")
     field(DTYP, "Soft Channel")
     info(interest, "HIGH")
 }
-alias("$(P)MODE", "TJMPER_$(TJUMPER_IOC_ID):MODE")
+alias("$(P)JMP:MODE", "TJMPER_$(TJUMPER_IOC_ID):MODE")
 
-record(mbbo, "$(P)MODE:SP")
+record(mbbo, "$(P)JMP:MODE:SP")
 {
     field(SCAN, "Passive")
     field(DTYP, "Soft Channel")
     info(interest, "HIGH")
 }
-alias("$(P)MODE:SP", "TJMPER_$(TJUMPER_IOC_ID):MODE:SP")
+alias("$(P)JMP:MODE:SP", "TJMPER_$(TJUMPER_IOC_ID):MODE:SP")
