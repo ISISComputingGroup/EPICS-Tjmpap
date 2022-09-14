@@ -17,3 +17,19 @@ record(bo, "$(P)DISABLE")
     field(ZNAM, "COMMS ENABLED")
     field(ONAM, "COMMS DISABLED")
 }
+
+record(mbbi, "$(P)MODE")
+{
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+    info(interest, "HIGH")
+}
+alias("$(P)MODE", "TJMPER_$(TJUMPER_IOC_ID):MODE")
+
+record(mbbo, "$(P)MODE:SP")
+{
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+    info(interest, "HIGH")
+}
+alias("$(P)MODE:SP", "TJMPER_$(TJUMPER_IOC_ID):MODE:SP")
