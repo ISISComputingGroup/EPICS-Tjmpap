@@ -1,0 +1,59 @@
+record(ai, "$(P)$(PLATE):TEMP:RAW")
+{
+    field(INP, "$(PVPREFIX)$(CONTROLLER):TEMP CP MSS")
+    field(DESC, "Raw value from $(PLATE) TEMP CNTLR")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+    info(archive, "VAL")
+}
+
+record(ao, "$(P)$(PLATE):TEMP:RAW:SP")
+{
+    field(OUT, "$(PVPREFIX)$(CONTROLLER):TEMP:SP CA PP")
+    field(DESC, "Raw value SP to $(PLATE) TEMP CNTLR")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+}
+
+record(ai, "$(P)$(PLATE):TEMP:RAW:SP:READBACK")
+{
+    field(INP, "$(PVPREFIX)$(CONTROLLER):TEMP:SP:RBV CP MSS")
+    field(DESC, "SP RBV from $(PLATE) TEMP CNTLR")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+}
+
+record(cvt, "$(P)$(PLATE):TEMP:SP:READBACK")
+{
+    field(INPX, "$(P)$(PLATE):TEMP:RAW:SP:READBACK CP MSS")
+    field(METH, "1D TABLE")
+    field(SPEC, "$(CALIBRATION_FILE)")
+    field(TDIR, "$(CALIBRATION_FOLDER)")
+    field(BDIR, "$(CALIBRATION_BASE_DIR)")
+}
+
+record(cvt, "$(P)$(PLATE):TEMP")
+{
+    field(INPX, "$(P)$(PLATE):TEMP:RAW CP MSS")
+    field(METH, "1D TABLE")
+    field(SPEC, "$(CALIBRATION_FILE)")
+    field(TDIR, "$(CALIBRATION_FOLDER)")
+    field(BDIR, "$(CALIBRATION_BASE_DIR)")
+    info(interest, "HIGH")
+    info(archive, "VAL")
+}
+
+record(cvt, "$(P)$(PLATE):TEMP:SP:CALIB")
+{
+    field(INPY, "$(P)$(PLATE):TEMP:SP")
+    field(METH, "1D TABLE INVERTED")
+    field(SPEC, "$(CALIBRATION_FILE)")
+    field(TDIR, "$(CALIBRATION_FOLDER)")
+    field(BDIR, "$(CALIBRATION_BASE_DIR)")
+    field(OUT, "$(P)$(PLATE):TEMP:RAW:SP PP")
+}
+
+record(ao, "$(P)$(PLATE):TEMP:SP")
+{
+    field(FLNK, "$(P)$(PLATE):TEMP:SP:CALIB")
+}
