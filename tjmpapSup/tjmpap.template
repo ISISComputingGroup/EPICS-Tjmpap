@@ -20,16 +20,270 @@ record(bo, "$(P)DISABLE")
 
 record(mbbi, "$(P)JMP:MODE")
 {
+    field(INP, "$(PVPREFIX)TJMPER_$(TJMPER_IOC_ID):MODE CP MSS")
     field(SCAN, "Passive")
     field(DTYP, "Soft Channel")
+    field(ZRST, "All out")                  # All home
+    field(ONST, "PLT1 and SMPL engaged")    # Engage Plate 1 and sample
+    field(TWST, "PLT2 and SMPL engaged")    # Engage Plate 2 and sample
     info(interest, "HIGH")
 }
-alias("$(P)JMP:MODE", "TJMPER_$(TJUMPER_IOC_ID):MODE")
 
 record(mbbo, "$(P)JMP:MODE:SP")
 {
+    field(OUT, "$(PVPREFIX)TJMPER_$(TJMPER_IOC_ID):MODE:SP CP MSS")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+    field(ZRST, "All out")
+    field(ONST, "PLT1 and SMPL engaged")
+    field(TWST, "PLT2 and SMPL engaged")
+    info(interest, "HIGH")
+}
+
+record(stringin, "$(P)TJMPER")
+{
+    field(VAL, "TJMPER_$(TJMPER_IOC_ID)")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+}
+
+record(stringin, "$(P)PLATE1:CONTROLLER")
+{
+    field(VAL, "$(BLOCK_1_TEMP_CONTROLLER)")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+}
+
+record(stringin, "$(P)PLATE2:CONTROLLER")
+{
+    field(VAL, "$(BLOCK_2_TEMP_CONTROLLER)")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+}
+
+record(stringin, "$(P)SAMPLE:READBACK")
+{
+    field(VAL, "$(SAMPLE_TEMP_READBACK)")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+}
+
+record(bi, "$(P)PLATE1:MOVING")
+{
+    field(INP, "$(PVPREFIX)TJMPER_$(TJMPER_IOC_ID):PLATE1:MOVING CP MSS")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+    field(ZNAM, "False")
+    field(ONAM, "True")
+    info(interest, "HIGH")
+}
+
+record(bi, "$(P)PLATE2:MOVING")
+{
+    field(INP, "$(PVPREFIX)TJMPER_$(TJMPER_IOC_ID):PLATE2:MOVING CP MSS")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+    field(ZNAM, "False")
+    field(ONAM, "True")
+    info(interest, "HIGH")
+}
+
+record(bi, "$(P)SAMPLE:MOVING")
+{
+    field(INP, "$(PVPREFIX)TJMPER_$(TJMPER_IOC_ID):SAMPLE:MOVING CP MSS")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+    field(ZNAM, "False")
+    field(ONAM, "True")
+    info(interest, "HIGH")
+}
+
+record(bi, "$(P)PLATE1:HOME")
+{
+    field(INP, "$(PVPREFIX)TJMPER_$(TJMPER_IOC_ID):LMT:PLATE1:HOME CP MSS")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+    field(ZNAM, "False")
+    field(ONAM, "True")
+    info(interest, "HIGH")
+}
+
+record(bi, "$(P)PLATE2:HOME")
+{
+    field(INP, "$(PVPREFIX)TJMPER_$(TJMPER_IOC_ID):LMT:PLATE2:HOME CP MSS")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+    field(ZNAM, "False")
+    field(ONAM, "True")
+    info(interest, "HIGH")
+}
+
+record(bi, "$(P)SAMPLE:HOME")
+{
+    field(INP, "$(PVPREFIX)TJMPER_$(TJMPER_IOC_ID):LMT:SAMPLE:HOME CP MSS")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+    field(ZNAM, "False")
+    field(ONAM, "True")
+    info(interest, "HIGH")
+}
+
+record(bi, "$(P)PLATE1:ENGAGED")
+{
+    field(INP, "$(PVPREFIX)TJMPER_$(TJMPER_IOC_ID):LMT:PLATE1:ENGAGED CP MSS")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+    field(ZNAM, "False")
+    field(ONAM, "True")
+    info(interest, "HIGH")
+}
+
+record(bi, "$(P)PLATE2:ENGAGED")
+{
+    field(INP, "$(PVPREFIX)TJMPER_$(TJMPER_IOC_ID):LMT:PLATE2:ENGAGED CP MSS")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+    field(ZNAM, "False")
+    field(ONAM, "True")
+    info(interest, "HIGH")
+}
+
+record(bi, "$(P)SAMPLE:ENGAGED")
+{
+    field(INP, "$(PVPREFIX)TJMPER_$(TJMPER_IOC_ID):LMT:SAMPLE:ENGAGED CP MSS")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+    field(ZNAM, "False")
+    field(ONAM, "True")
+    info(interest, "HIGH")
+}
+
+record(ai, "$(P)SAMPLE:TEMP")
+{
+    field(INP, "$(PVPREFIX)$(SAMPLE_TEMP_READBACK):TEMP CP MSS")
+    field(DESC, "Value for the sample temperature")
     field(SCAN, "Passive")
     field(DTYP, "Soft Channel")
     info(interest, "HIGH")
+    info(archive, "VAL")
 }
-alias("$(P)JMP:MODE:SP", "TJMPER_$(TJUMPER_IOC_ID):MODE:SP")
+
+record(ai, "$(P)PLATE1:TEMP:RAW")
+{
+    field(INP, "$(PVPREFIX)$(BLOCK_1_TEMP_CONTROLLER):TEMP CP MSS")
+    #field(DESC, "Raw value from the Plate1 temperature controller")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+    info(archive, "VAL")
+}
+
+record(ao, "$(P)PLATE1:TEMP:RAW:SP")
+{
+    field(OUT, "$(PVPREFIX)$(BLOCK_1_TEMP_CONTROLLER):TEMP:SP CA PP")
+    #field(DESC, "Raw value to send to the Plate1 temperature controller")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+}
+
+record(ai, "$(P)PLATE1:TEMP:RAW:SP:READBACK")
+{
+    field(INP, "$(PVPREFIX)$(BLOCK_1_TEMP_CONTROLLER):TEMP:SP:RBV CP MSS")
+    #field(DESC, "Raw value to send to the Plate1 temperature controller")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+}
+
+record(ai, "$(P)PLATE2:TEMP:RAW")
+{
+    field(INP, "$(PVPREFIX)$(BLOCK_2_TEMP_CONTROLLER):TEMP CP MSS")
+    #field(DESC, "Raw value from the Plate2 temperature controller")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+    info(archive, "VAL")
+}
+
+record(ao, "$(P)PLATE2:TEMP:RAW:SP")
+{
+    field(OUT, "$(PVPREFIX)$(BLOCK_2_TEMP_CONTROLLER):TEMP:SP CA PP")
+    #field(DESC, "Raw value to send to the Plate2 temperature controller")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+}
+
+record(ai, "$(P)PLATE2:TEMP:RAW:SP:READBACK")
+{
+    field(INP, "$(PVPREFIX)$(BLOCK_2_TEMP_CONTROLLER):TEMP:SP:RBV CP MSS")
+    #field(DESC, "Raw value to send to the Plate2 temperature controller")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+}
+
+record(cvt, "$(P)PLATE1:TEMP")
+{
+    field(INPX, "$(P)PLATE1:TEMP:RAW CP MSS")
+    field(METH, "1D TABLE")
+    field(SPEC, "$(CALIBRATION_FILE)")
+    field(TDIR, "$(CALIBRATION_FOLDER)")
+    field(BDIR, "$(CALIBRATION_BASE_DIR)")
+    info(interest, "HIGH")
+    info(archive, "VAL")
+}
+
+record(cvt, "$(P)PLATE2:TEMP")
+{
+    field(INPX, "$(P)PLATE2:TEMP:RAW CP MSS")
+    field(METH, "1D TABLE")
+    field(SPEC, "$(CALIBRATION_FILE)")
+    field(TDIR, "$(CALIBRATION_FOLDER)")
+    field(BDIR, "$(CALIBRATION_BASE_DIR)")
+    info(interest, "HIGH")
+    info(archive, "VAL")
+}
+
+record(ao, "$(P)PLATE1:TEMP:SP")
+{
+    field(FLNK, "$(P)PLATE1:TEMP:SP:CALIB")
+}
+
+record(ao, "$(P)PLATE2:TEMP:SP")
+{
+    field(FLNK, "$(P)PLATE2:TEMP:SP:CALIB")
+}
+
+record(cvt, "$(P)PLATE1:TEMP:SP:CALIB")
+{
+    field(INPY, "$(P)PLATE1:TEMP:SP")
+    field(METH, "1D TABLE INVERTED")
+    field(SPEC, "$(CALIBRATION_FILE)")
+    field(TDIR, "$(CALIBRATION_FOLDER)")
+    field(BDIR, "$(CALIBRATION_BASE_DIR)")
+    field(OUT, "$(P)PLATE1:TEMP:RAW:SP PP")
+}
+
+record(cvt, "$(P)PLATE2:TEMP:SP:CALIB")
+{
+    field(INPY, "$(P)PLATE2:TEMP:SP")
+    field(METH, "1D TABLE INVERTED")
+    field(SPEC, "$(CALIBRATION_FILE)")
+    field(TDIR, "$(CALIBRATION_FOLDER)")
+    field(BDIR, "$(CALIBRATION_BASE_DIR)")
+    field(OUT, "$(P)PLATE2:TEMP:RAW:SP PP")
+}
+
+record(cvt, "$(P)PLATE1:TEMP:SP:READBACK")
+{
+    field(INPX, "$(P)PLATE1:TEMP:RAW:SP:READBACK CP MSS")
+    field(METH, "1D TABLE")
+    field(SPEC, "$(CALIBRATION_FILE)")
+    field(TDIR, "$(CALIBRATION_FOLDER)")
+    field(BDIR, "$(CALIBRATION_BASE_DIR)")
+}
+
+record(cvt, "$(P)PLATE2:TEMP:SP:READBACK")
+{
+    field(INPX, "$(P)PLATE2:TEMP:RAW:SP:READBACK CP MSS")
+    field(METH, "1D TABLE")
+    field(SPEC, "$(CALIBRATION_FILE)")
+    field(TDIR, "$(CALIBRATION_FOLDER)")
+    field(BDIR, "$(CALIBRATION_BASE_DIR)")
+}
