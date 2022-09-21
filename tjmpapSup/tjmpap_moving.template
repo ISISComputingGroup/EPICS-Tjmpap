@@ -1,7 +1,0 @@
-record(bi, "$(P)$(PART):MOVING")
-{
-    field(SCAN, "Passive")
-    field(DTYP, "Soft Channel")
-    info(interest, "HIGH")
-}
-alias("$(P)$(PART):MOVING", "TJMPER_$(TJUMPER_IOC_ID):$(PART):MOVING")
