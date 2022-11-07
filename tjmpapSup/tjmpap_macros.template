@@ -1,0 +1,6 @@
+record(stringin, "$(P)$(CONTROLLER)")
+{
+    field(VAL, "$(MACRO)")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+}

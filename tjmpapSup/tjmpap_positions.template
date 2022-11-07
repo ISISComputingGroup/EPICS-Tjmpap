@@ -1,0 +1,9 @@
+record(bi, "$(P)$(POSITION)")
+{
+    field(INP, "$(PVPREFIX)TJMPER_$(TJMPER_IOC_ID):$(TJMPER_POSITION) CP MSS")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+    field(ZNAM, "False")
+    field(ONAM, "True")
+    info(interest, "HIGH")
+}

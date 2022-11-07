@@ -1,0 +1,51 @@
+record(bo, "$(P)SIM")
+{
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+    field(ZNAM, "NO")
+    field(ONAM, "YES")
+    field(VAL, "$(RECSIM=0)")
+    field(PINI, "YES")
+}
+
+record(bo, "$(P)DISABLE")
+{
+    field(DESC, "Disable comms")
+    field(PINI, "YES")
+    field(VAL, "$(DISABLE=0)")
+    field(OMSL, "supervisory")
+    field(ZNAM, "COMMS ENABLED")
+    field(ONAM, "COMMS DISABLED")
+}
+
+record(mbbi, "$(P)JMP:MODE")
+{
+    field(INP, "$(PVPREFIX)TJMPER_$(TJMPER_IOC_ID):MODE CP MSS")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+    field(ZRST, "All out")                  # All home
+    field(ONST, "PLT1 and SMPL engaged")    # Engage Plate 1 and sample
+    field(TWST, "PLT2 and SMPL engaged")    # Engage Plate 2 and sample
+    info(interest, "HIGH")
+}
+
+record(mbbo, "$(P)JMP:MODE:SP")
+{
+    field(OUT, "$(PVPREFIX)TJMPER_$(TJMPER_IOC_ID):MODE:SP CP MSS")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+    field(ZRST, "All out")
+    field(ONST, "PLT1 and SMPL engaged")
+    field(TWST, "PLT2 and SMPL engaged")
+    info(interest, "HIGH")
+}
+
+record(ai, "$(P)SAMPLE:TEMP")
+{
+    field(INP, "$(PVPREFIX)$(SAMPLE_TEMP_READBACK):TEMP CP MSS")
+    field(DESC, "Value for the sample temperature")
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+    info(interest, "HIGH")
+    info(archive, "VAL")
+}
