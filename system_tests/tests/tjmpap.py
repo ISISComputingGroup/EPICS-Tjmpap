@@ -17,16 +17,22 @@ DEVICE_PREFIX = "TJMPAP_01"
 CALIBRATION_FOLDER = "tjmpap/master/calibrations"
 CALIBRATION_BASE_DIR = "C:/Instrument/Apps/EPICS/support"
 MACROS = [
-    ({
-        "CALIBRATION_FILE" : "1x1.txt",
-        "CALIBRATION_FOLDER" : CALIBRATION_FOLDER,
-        "CALIBRATION_BASE_DIR" : CALIBRATION_BASE_DIR
-    }, 1.0),
-    ({
-        "CALIBRATION_FILE" : "1x2.txt",
-        "CALIBRATION_FOLDER" : CALIBRATION_FOLDER,
-        "CALIBRATION_BASE_DIR" : CALIBRATION_BASE_DIR
-    }, 2.0)
+    (
+        {
+            "CALIBRATION_FILE": "1x1.txt",
+            "CALIBRATION_FOLDER": CALIBRATION_FOLDER,
+            "CALIBRATION_BASE_DIR": CALIBRATION_BASE_DIR,
+        },
+        1.0,
+    ),
+    (
+        {
+            "CALIBRATION_FILE": "1x2.txt",
+            "CALIBRATION_FOLDER": CALIBRATION_FOLDER,
+            "CALIBRATION_BASE_DIR": CALIBRATION_BASE_DIR,
+        },
+        2.0,
+    ),
 ]
 
 
@@ -46,7 +52,7 @@ IOCS = [
             "ADDR_7": "",
             "ADDR_8": "",
             "ADDR_9": "",
-            "ADDR_10": ""
+            "ADDR_10": "",
         },
         "emulator": "eurotherm",
         "lewis_additional_path": os.path.join(EPICS_TOP, "support", "DeviceEmulator", "master"),
@@ -64,13 +70,15 @@ IOCS = [
         "directory": get_default_ioc_dir("TJMPER"),
         "macros": {},
         "emulator": "Tjmper",
-        "lewis_additional_path": os.path.join(EPICS_TOP, "support", "tjmper", "master", "system_tests"),
+        "lewis_additional_path": os.path.join(
+            EPICS_TOP, "support", "tjmper", "master", "system_tests"
+        ),
     },
     {
         "name": DEVICE_PREFIX,
         "directory": get_default_ioc_dir("TJMPAP"),
         "ioc_launcher_class": ProcServLauncher,
-        "macros": MACROS[0][0]
+        "macros": MACROS[0][0],
     },
 ]
 
@@ -79,9 +87,9 @@ TEST_MODES = [TestModes.DEVSIM]
 
 
 MODES = [
-    ("All out",                 ["True", "False", "True", "False", "True", "False"]),
-    ("PLT1 and SMPL engaged",   ["False", "True", "True", "False", "False", "True"]),
-    ("PLT2 and SMPL engaged",   ["True", "False", "False", "True", "False", "True"])
+    ("All out", ["True", "False", "True", "False", "True", "False"]),
+    ("PLT1 and SMPL engaged", ["False", "True", "True", "False", "False", "True"]),
+    ("PLT2 and SMPL engaged", ["True", "False", "False", "True", "False", "True"]),
 ]
 
 
@@ -89,6 +97,7 @@ class TjmpapTests(unittest.TestCase):
     """
     Tests for the Tjmpap IOC.
     """
+
     def setUp(self):
         self._ioc = IOCRegister.get_running(DEVICE_PREFIX)
         self.assertIsNotNone(self._ioc)
@@ -105,7 +114,7 @@ class TjmpapTests(unittest.TestCase):
 
         self._lewis_julabo, self._ioc_julabo = get_running_lewis_and_ioc("julabo", JULABO_PREFIX)
         self.ca_julabo = ChannelAccess(device_prefix=JULABO_PREFIX)
-        self.ca_julabo.assert_that_pv_exists("TEMP", timeout=30)        
+        self.ca_julabo.assert_that_pv_exists("TEMP", timeout=30)
 
     def test_WHEN_controllers_connected_THEN_controller_names_correct(self):
         self.ca.assert_that_pv_is("PLATE1:CONTROLLER", f"{EUROTHERM_PREFIX}:{EUROTHERM_ADDRESS}")
@@ -113,26 +122,36 @@ class TjmpapTests(unittest.TestCase):
         self.ca.assert_that_pv_is("SAMPLE:READBACK", f"{EUROTHERM_PREFIX}:{EUROTHERM_ADDRESS}")
 
     @parameterized.expand(parameterized_list(MACROS))
-    def test_WHEN_temperature_set_on_block_1_THEN_temperature_updates_on_controller(self, _, macros, multiplier):
+    def test_WHEN_temperature_set_on_block_1_THEN_temperature_updates_on_controller(
+        self, _, macros, multiplier
+    ):
         with self._ioc.start_with_macros(macros, "JMP:MODE"):
             self.ca.set_pv_value("PLATE1:TEMP:SP", 5.0)
             self.ca_euro.assert_that_pv_is("TEMP:SP:RBV", 5.0 / multiplier)
-            self._lewis_euro.assert_that_emulator_value_is("ramp_setpoint_temperature", str(5.0 / multiplier))
+            self._lewis_euro.assert_that_emulator_value_is(
+                "ramp_setpoint_temperature", str(5.0 / multiplier)
+            )
 
             self._lewis_euro.backdoor_set_on_device("current_temperature", 6.0)
             self.ca.assert_that_pv_is_number("PLATE1:TEMP", 6.0 * multiplier, tolerance=0.01)
 
     @parameterized.expand(parameterized_list(MACROS))
-    def test_WHEN_temperature_set_on_block_2_THEN_temperature_updates_on_controller(self, _, macros, multiplier):
+    def test_WHEN_temperature_set_on_block_2_THEN_temperature_updates_on_controller(
+        self, _, macros, multiplier
+    ):
         with self._ioc.start_with_macros(macros, "JMP:MODE"):
             self.ca.set_pv_value("PLATE2:TEMP:SP", 10.0)
             self.ca_julabo.assert_that_pv_is("TEMP:SP:RBV", 10.0 / multiplier)
-            self._lewis_julabo.assert_that_emulator_value_is("set_point_temperature", str(10.0 / multiplier))
+            self._lewis_julabo.assert_that_emulator_value_is(
+                "set_point_temperature", str(10.0 / multiplier)
+            )
 
             self._lewis_julabo.backdoor_set_on_device("temperature", 11.0)
             self.ca.assert_that_pv_is_number("PLATE2:TEMP", 11.0 * multiplier, tolerance=0.01)
 
-    def test_WHEN_temperature_set_on_readback_controller_via_backdoor_THEN_temperature_updates_correctly(self):
+    def test_WHEN_temperature_set_on_readback_controller_via_backdoor_THEN_temperature_updates_correctly(
+        self,
+    ):
         self._lewis_euro.backdoor_set_on_device("current_temperature", 33.0)
         self.ca.assert_that_pv_is_number("SAMPLE:TEMP", 33.0, tolerance=0.01)
 
