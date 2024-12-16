@@ -9,6 +9,7 @@ from utils.testing import get_running_lewis_and_ioc, parameterized_list
 
 EUROTHERM_PREFIX = "EUROTHRM_01"
 EUROTHERM_ADDRESS = "A01"
+EUROTHERM_ADDR_01 = "01"
 JULABO_PREFIX = "JULABO_01"
 TJMPER_PREFIX = "TJMPER_01"
 DEVICE_PREFIX = "TJMPAP_01"
@@ -43,7 +44,7 @@ IOCS = [
         "ioc_launcher_class": ProcServLauncher,
         "macros": {
             "ADDR": EUROTHERM_ADDRESS,
-            "ADDR_1": 1,
+            "ADDR_1": EUROTHERM_ADDR_01,
             "ADDR_2": "",
             "ADDR_3": "",
             "ADDR_4": "",
@@ -110,7 +111,6 @@ class TjmpapTests(unittest.TestCase):
         self._lewis_euro, self._ioc_euro = get_running_lewis_and_ioc("eurotherm", EUROTHERM_PREFIX)
         self.ca_euro = ChannelAccess(device_prefix=f"{EUROTHERM_PREFIX}:{EUROTHERM_ADDRESS}")
         self.ca_euro.assert_that_pv_exists("CAL:SEL", timeout=10)
-        self._lewis_euro.backdoor_set_on_device("address", "A01")
 
         self._lewis_julabo, self._ioc_julabo = get_running_lewis_and_ioc("julabo", JULABO_PREFIX)
         self.ca_julabo = ChannelAccess(device_prefix=JULABO_PREFIX)
@@ -128,11 +128,9 @@ class TjmpapTests(unittest.TestCase):
         with self._ioc.start_with_macros(macros, "JMP:MODE"):
             self.ca.set_pv_value("PLATE1:TEMP:SP", 5.0)
             self.ca_euro.assert_that_pv_is("TEMP:SP:RBV", 5.0 / multiplier)
-            self._lewis_euro.assert_that_emulator_value_is(
-                "ramp_setpoint_temperature", str(5.0 / multiplier)
-            )
+            assert str(5.0/multiplier) in self._lewis_euro.backdoor_run_function_on_device("ramp_setpoint_temperature", [EUROTHERM_ADDR_01])[0].decode("utf-8")
 
-            self._lewis_euro.backdoor_set_on_device("current_temperature", 6.0)
+            self._lewis_euro.backdoor_run_function_on_device("set_current_temperature", [EUROTHERM_ADDR_01, 6.0])
             self.ca.assert_that_pv_is_number("PLATE1:TEMP", 6.0 * multiplier, tolerance=0.01)
 
     @parameterized.expand(parameterized_list(MACROS))
@@ -152,7 +150,7 @@ class TjmpapTests(unittest.TestCase):
     def test_WHEN_temperature_set_on_readback_controller_via_backdoor_THEN_temperature_updates_correctly(
         self,
     ):
-        self._lewis_euro.backdoor_set_on_device("current_temperature", 33.0)
+        self._lewis_euro.backdoor_run_function_on_device("set_current_temperature", [EUROTHERM_ADDR_01, 33.0])
         self.ca.assert_that_pv_is_number("SAMPLE:TEMP", 33.0, tolerance=0.01)
 
     @parameterized.expand(parameterized_list(MODES))
